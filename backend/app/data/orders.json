@@ -1,0 +1,163 @@
+[
+    {
+        "order_id": "ORD-1001",
+        "customer_name": "Alice Johnson",
+        "customer_email": "alice@example.com",
+        "status": "delivered",
+        "items": [
+            {
+                "name": "Wireless Headphones",
+                "quantity": 1,
+                "price": 79.99
+            },
+            {
+                "name": "Phone Case",
+                "quantity": 2,
+                "price": 15.99
+            }
+        ],
+        "total": 111.97,
+        "order_date": "2026-02-10",
+        "delivery_date": "2026-02-15",
+        "tracking_number": "TRK-889201"
+    },
+    {
+        "order_id": "ORD-1002",
+        "customer_name": "Bob Smith",
+        "customer_email": "bob@example.com",
+        "status": "shipped",
+        "items": [
+            {
+                "name": "Laptop Stand",
+                "quantity": 1,
+                "price": 49.99
+            }
+        ],
+        "total": 49.99,
+        "order_date": "2026-02-20",
+        "delivery_date": null,
+        "tracking_number": "TRK-991034"
+    },
+    {
+        "order_id": "ORD-1003",
+        "customer_name": "Carol Davis",
+        "customer_email": "carol@example.com",
+        "status": "processing",
+        "items": [
+            {
+                "name": "Mechanical Keyboard",
+                "quantity": 1,
+                "price": 129.99
+            },
+            {
+                "name": "Mouse Pad XL",
+                "quantity": 1,
+                "price": 24.99
+            },
+            {
+                "name": "USB-C Hub",
+                "quantity": 1,
+                "price": 39.99
+            }
+        ],
+        "total": 194.97,
+        "order_date": "2026-02-25",
+        "delivery_date": null,
+        "tracking_number": null
+    },
+    {
+        "order_id": "ORD-1004",
+        "customer_name": "David Wilson",
+        "customer_email": "david@example.com",
+        "status": "delivered",
+        "items": [
+            {
+                "name": "Smart Watch",
+                "quantity": 1,
+                "price": 299.99
+            }
+        ],
+        "total": 299.99,
+        "order_date": "2026-01-28",
+        "delivery_date": "2026-02-02",
+        "tracking_number": "TRK-770182"
+    },
+    {
+        "order_id": "ORD-1005",
+        "customer_name": "Emma Brown",
+        "customer_email": "emma@example.com",
+        "status": "cancelled",
+        "items": [
+            {
+                "name": "Bluetooth Speaker",
+                "quantity": 2,
+                "price": 45.99
+            }
+        ],
+        "total": 91.98,
+        "order_date": "2026-02-18",
+        "delivery_date": null,
+        "tracking_number": null
+    },
+    {
+        "order_id": "ORD-1006",
+        "customer_name": "Frank Miller",
+        "customer_email": "frank@example.com",
+        "status": "shipped",
+        "items": [
+            {
+                "name": "Gaming Mouse",
+                "quantity": 1,
+                "price": 69.99
+            },
+            {
+                "name": "Mouse Bungee",
+                "quantity": 1,
+                "price": 19.99
+            }
+        ],
+        "total": 89.98,
+        "order_date": "2026-02-22",
+        "delivery_date": null,
+        "tracking_number": "TRK-554821"
+    },
+    {
+        "order_id": "ORD-1007",
+        "customer_name": "Grace Lee",
+        "customer_email": "grace@example.com",
+        "status": "delivered",
+        "items": [
+            {
+                "name": "Webcam HD",
+                "quantity": 1,
+                "price": 89.99
+            },
+            {
+                "name": "Ring Light",
+                "quantity": 1,
+                "price": 34.99
+            }
+        ],
+        "total": 124.98,
+        "order_date": "2026-02-05",
+        "delivery_date": "2026-02-10",
+        "tracking_number": "TRK-662190"
+    },
+    {
+        "order_id": "ORD-1008",
+        "customer_name": "Henry Taylor",
+        "customer_email": "henry@example.com",
+        "status": "returned",
+        "items": [
+            {
+                "name": "Noise Cancelling Earbuds",
+                "quantity": 1,
+                "price": 149.99
+            }
+        ],
+        "total": 149.99,
+        "order_date": "2026-02-01",
+        "delivery_date": "2026-02-06",
+        "tracking_number": "TRK-443019"
+    }
+]
