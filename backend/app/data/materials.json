@@ -1,0 +1,258 @@
+[
+    {
+        "material_id": "MAT-001",
+        "name": "Ti-6Al-4V Titanium",
+        "category": "Titanium Alloy",
+        "properties": {
+            "tensile_strength_mpa": 950,
+            "yield_strength_mpa": 880,
+            "hardness_hrc": 36,
+            "density_g_cm3": 4.43,
+            "melting_point_c": 1660,
+            "thermal_conductivity_w_mk": 6.7,
+            "cost_per_kg_usd": 35.00,
+            "machinability_rating": 22
+        },
+        "applications": [
+            "Aerospace turbine blades",
+            "Medical implants",
+            "High-performance fasteners"
+        ],
+        "compatible_machines": [
+            "CNC-001",
+            "CNC-002",
+            "3DP-001"
+        ],
+        "notes": "Excellent strength-to-weight ratio. Requires carbide tooling and low cutting speeds. Prone to work hardening."
+    },
+    {
+        "material_id": "MAT-002",
+        "name": "316L Stainless Steel",
+        "category": "Stainless Steel",
+        "properties": {
+            "tensile_strength_mpa": 580,
+            "yield_strength_mpa": 290,
+            "hardness_hrc": 25,
+            "density_g_cm3": 7.99,
+            "melting_point_c": 1400,
+            "thermal_conductivity_w_mk": 16.3,
+            "cost_per_kg_usd": 4.50,
+            "machinability_rating": 60
+        },
+        "applications": [
+            "Valve housings",
+            "Chemical processing",
+            "Food industry equipment"
+        ],
+        "compatible_machines": [
+            "CNC-001",
+            "CNC-002",
+            "3DP-001",
+            "3DP-002"
+        ],
+        "notes": "Excellent corrosion resistance. Good machinability. Widely used for medical and marine applications."
+    },
+    {
+        "material_id": "MAT-003",
+        "name": "AlSi10Mg Aluminum",
+        "category": "Aluminum Alloy",
+        "properties": {
+            "tensile_strength_mpa": 350,
+            "yield_strength_mpa": 230,
+            "hardness_hrc": 12,
+            "density_g_cm3": 2.67,
+            "melting_point_c": 570,
+            "thermal_conductivity_w_mk": 130,
+            "cost_per_kg_usd": 8.00,
+            "machinability_rating": 85
+        },
+        "applications": [
+            "Heat sinks",
+            "Automotive brackets",
+            "Drone components"
+        ],
+        "compatible_machines": [
+            "CNC-001",
+            "CNC-002",
+            "3DP-001",
+            "LSR-001"
+        ],
+        "notes": "Lightweight with excellent thermal conductivity. Ideal for additive manufacturing. Post-processing heat treatment recommended."
+    },
+    {
+        "material_id": "MAT-004",
+        "name": "Inconel 718",
+        "category": "Nickel Superalloy",
+        "properties": {
+            "tensile_strength_mpa": 1375,
+            "yield_strength_mpa": 1100,
+            "hardness_hrc": 44,
+            "density_g_cm3": 8.19,
+            "melting_point_c": 1336,
+            "thermal_conductivity_w_mk": 11.4,
+            "cost_per_kg_usd": 55.00,
+            "machinability_rating": 12
+        },
+        "applications": [
+            "Gas turbine components",
+            "Rocket engines",
+            "Nuclear reactor parts"
+        ],
+        "compatible_machines": [
+            "CNC-001",
+            "3DP-001"
+        ],
+        "notes": "Exceptional high-temperature strength. Very difficult to machine — requires ceramic or CBN tooling. Extreme tool wear expected."
+    },
+    {
+        "material_id": "MAT-005",
+        "name": "Case-Hardened Steel 8620",
+        "category": "Alloy Steel",
+        "properties": {
+            "tensile_strength_mpa": 795,
+            "yield_strength_mpa": 585,
+            "hardness_hrc": 62,
+            "density_g_cm3": 7.85,
+            "melting_point_c": 1450,
+            "thermal_conductivity_w_mk": 46.6,
+            "cost_per_kg_usd": 3.20,
+            "machinability_rating": 65
+        },
+        "applications": [
+            "Gears",
+            "Shafts",
+            "Bearings",
+            "Camshafts"
+        ],
+        "compatible_machines": [
+            "CNC-001",
+            "CNC-002"
+        ],
+        "notes": "Machine in soft state then case-harden. Core remains tough while surface is extremely hard. Ideal for wear-resistant applications."
+    },
+    {
+        "material_id": "MAT-006",
+        "name": "CoCr (Cobalt-Chrome)",
+        "category": "Cobalt Alloy",
+        "properties": {
+            "tensile_strength_mpa": 1160,
+            "yield_strength_mpa": 850,
+            "hardness_hrc": 38,
+            "density_g_cm3": 8.30,
+            "melting_point_c": 1350,
+            "thermal_conductivity_w_mk": 14.8,
+            "cost_per_kg_usd": 80.00,
+            "machinability_rating": 18
+        },
+        "applications": [
+            "Medical implants (hip/knee)",
+            "Dental prosthetics",
+            "Aerospace wear components"
+        ],
+        "compatible_machines": [
+            "3DP-002"
+        ],
+        "notes": "Biocompatible. FDA-approved for medical implants. Selective laser melting preferred over machining due to extreme hardness."
+    },
+    {
+        "material_id": "MAT-007",
+        "name": "6061-T6 Aluminum",
+        "category": "Aluminum Alloy",
+        "properties": {
+            "tensile_strength_mpa": 310,
+            "yield_strength_mpa": 276,
+            "hardness_hrc": 10,
+            "density_g_cm3": 2.70,
+            "melting_point_c": 582,
+            "thermal_conductivity_w_mk": 167,
+            "cost_per_kg_usd": 3.80,
+            "machinability_rating": 90
+        },
+        "applications": [
+            "Structural brackets",
+            "Robotic arm components",
+            "Jigs and fixtures"
+        ],
+        "compatible_machines": [
+            "CNC-001",
+            "CNC-002",
+            "LSR-001",
+            "ROB-001"
+        ],
+        "notes": "Most popular aluminum alloy for machining. Excellent machinability and weldability. Cost-effective for prototyping."
+    },
+    {
+        "material_id": "MAT-008",
+        "name": "H13 Tool Steel",
+        "category": "Tool Steel",
+        "properties": {
+            "tensile_strength_mpa": 1820,
+            "yield_strength_mpa": 1500,
+            "hardness_hrc": 52,
+            "density_g_cm3": 7.80,
+            "melting_point_c": 1427,
+            "thermal_conductivity_w_mk": 24.3,
+            "cost_per_kg_usd": 12.00,
+            "machinability_rating": 40
+        },
+        "applications": [
+            "Injection mold inserts",
+            "Die casting dies",
+            "Extrusion tools"
+        ],
+        "compatible_machines": [
+            "CNC-001",
+            "CNC-002"
+        ],
+        "notes": "Excellent hot hardness and thermal fatigue resistance. Machine in annealed state then heat-treat. EDM finishing common for complex cavities."
+    },
+    {
+        "material_id": "MAT-009",
+        "name": "Carbon Fiber Composite (CFRP)",
+        "category": "Composite",
+        "properties": {
+            "tensile_strength_mpa": 1500,
+            "yield_strength_mpa": null,
+            "hardness_hrc": null,
+            "density_g_cm3": 1.55,
+            "melting_point_c": null,
+            "thermal_conductivity_w_mk": 5.0,
+            "cost_per_kg_usd": 25.00,
+            "machinability_rating": 30
+        },
+        "applications": [
+            "Drone frames",
+            "Racing components",
+            "Satellite structures"
+        ],
+        "compatible_machines": [
+            "LSR-001"
+        ],
+        "notes": "Laser cutting preferred — no delamination risk vs. mechanical cutting. Extremely lightweight with exceptional stiffness. Dust is hazardous — respiratory protection required."
+    },
+    {
+        "material_id": "MAT-010",
+        "name": "Maraging Steel 300",
+        "category": "Maraging Steel",
+        "properties": {
+            "tensile_strength_mpa": 2050,
+            "yield_strength_mpa": 2000,
+            "hardness_hrc": 54,
+            "density_g_cm3": 8.10,
+            "melting_point_c": 1413,
+            "thermal_conductivity_w_mk": 25.9,
+            "cost_per_kg_usd": 42.00,
+            "machinability_rating": 35
+        },
+        "applications": [
+            "Tooling inserts",
+            "Aerospace landing gear",
+            "High-stress fasteners"
+        ],
+        "compatible_machines": [
+            "CNC-001",
+            "3DP-001"
+        ],
+        "notes": "Ultra-high strength with good ductility. Ages at 480°C for 3-6 hours. Excellent for conformal cooling channels in AM tooling."
+    }
+]

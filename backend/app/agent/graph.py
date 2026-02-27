@@ -1,19 +1,21 @@
 from langgraph.graph import StateGraph, END
 from langgraph.prebuilt import ToolNode
 from langchain_openai import ChatOpenAI
-from langchain_core.messages import SystemMessage
+from langchain_core.messages import SystemMessage, AIMessage
+import json
 
 from app.agent.state import AgentState
-from app.agent.prompts import SYSTEM_PROMPT
+from app.agent.prompts import SYSTEM_PROMPT, PLANNER_PROMPT
 from app.agent.skills.order_lookup import work_order_lookup
 from app.agent.skills.refund import defect_report
 from app.agent.skills.faq_search import knowledge_base_search
 from app.agent.skills.escalation import escalate_to_engineer
 from app.agent.skills.sentiment import equipment_status
+from app.agent.skills.chart_generator import generate_chart
 from app.config import OPENAI_API_KEY, OPENAI_MODEL, TEMPERATURE
 
 # All agent skills (tools)
-tools = [work_order_lookup, equipment_status, defect_report, knowledge_base_search, escalate_to_engineer]
+tools = [work_order_lookup, equipment_status, defect_report, knowledge_base_search, escalate_to_engineer, generate_chart]
 
 SKILL_DESCRIPTIONS = {
     "work_order_lookup": {
@@ -40,6 +42,11 @@ SKILL_DESCRIPTIONS = {
         "name": "Engineer Escalation",
         "description": "Escalate issues to engineering or management",
         "icon": "🙋"
+    },
+    "generate_chart": {
+        "name": "Chart Generation",
+        "description": "Generate performance charts and data visualizations",
+        "icon": "📊"
     }
 }
 
@@ -53,6 +60,42 @@ def _create_llm() -> ChatOpenAI:
     )
 
 
+def _planner_node(state: AgentState) -> dict:
+    """Plan which skills to use and in what order."""
+    llm = _create_llm()
+    messages = state["messages"]
+    
+    # Get the latest user message
+    user_msg = ""
+    for msg in reversed(messages):
+        if hasattr(msg, 'content') and not isinstance(msg, AIMessage):
+            user_msg = msg.content
+            break
+    
+    planner_messages = [
+        SystemMessage(content=PLANNER_PROMPT),
+        SystemMessage(content=f"User query: {user_msg}")
+    ]
+    
+    response = llm.invoke(planner_messages)
+    plan_text = response.content.strip()
+    
+    # Try to parse the plan
+    try:
+        # Handle markdown code blocks
+        if "```" in plan_text:
+            plan_text = plan_text.split("```")[1]
+            if plan_text.startswith("json"):
+                plan_text = plan_text[4:]
+        plan = json.loads(plan_text)
+    except (json.JSONDecodeError, IndexError):
+        plan = []
+    
+    # Store plan in a system message so the stream handler can pick it up
+    plan_msg = SystemMessage(content=f"__PLAN__:{json.dumps(plan)}")
+    return {"messages": [plan_msg]}
+
+
 def _agent_node(state: AgentState) -> dict:
     """Run the LLM agent with tools bound."""
     llm = _create_llm()
@@ -60,8 +103,10 @@ def _agent_node(state: AgentState) -> dict:
 
     messages = state["messages"]
     # Prepend system prompt if not already there
-    if not messages or not isinstance(messages[0], SystemMessage):
-        messages = [SystemMessage(content=SYSTEM_PROMPT)] + list(messages)
+    if not messages or not isinstance(messages[0], SystemMessage) or "__PLAN__" in messages[0].content:
+        # Filter out plan messages and prepend system prompt
+        filtered = [m for m in messages if not (isinstance(m, SystemMessage) and "__PLAN__" in m.content)]
+        messages = [SystemMessage(content=SYSTEM_PROMPT)] + filtered
 
     response = llm_with_tools.invoke(messages)
     return {"messages": [response]}
@@ -79,12 +124,16 @@ def build_graph() -> StateGraph:
     """Build and compile the LangGraph agent graph."""
     graph = StateGraph(AgentState)
 
-    # Add nodes
+    # Add nodes — sequential: planner → agent → tools → agent loop
+    graph.add_node("planner", _planner_node)
     graph.add_node("agent", _agent_node)
     graph.add_node("tools", ToolNode(tools))
 
-    # Set entry point
-    graph.set_entry_point("agent")
+    # Set entry point to planner
+    graph.set_entry_point("planner")
+
+    # Planner always goes to agent
+    graph.add_edge("planner", "agent")
 
     # Add conditional edge from agent
     graph.add_conditional_edges(

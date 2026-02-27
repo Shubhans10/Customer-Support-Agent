@@ -1,5 +1,5 @@
 import { useState, useCallback, useRef } from "react";
-import type { Message, SkillStep, ChatState } from "../types";
+import type { Message, SkillStep, PlanStep, ChatState, ChartData } from "../types";
 import { API_BASE_URL } from "../utils/api";
 
 function generateId(): string {
@@ -10,6 +10,7 @@ export function useChat() {
     const [state, setState] = useState<ChatState>({
         messages: [],
         skillSteps: [],
+        planSteps: [],
         isLoading: false,
         conversationId: generateId(),
         error: null,
@@ -33,6 +34,7 @@ export function useChat() {
                 ...prev,
                 messages: [...prev.messages, userMessage],
                 skillSteps: [],
+                planSteps: [],
                 isLoading: true,
                 error: null,
             }));
@@ -44,6 +46,7 @@ export function useChat() {
                 role: "assistant",
                 content: "",
                 timestamp: new Date().toISOString(),
+                charts: [],
             };
 
             setState((prev) => ({
@@ -113,6 +116,15 @@ export function useChat() {
     const handleSSEEvent = useCallback(
         (eventType: string, data: Record<string, unknown>, assistantId: string) => {
             switch (eventType) {
+                case "plan": {
+                    const steps = data.steps as PlanStep[];
+                    setState((prev) => ({
+                        ...prev,
+                        planSteps: steps || [],
+                    }));
+                    break;
+                }
+
                 case "skill_start": {
                     const step: SkillStep = {
                         id: generateId(),
@@ -148,6 +160,23 @@ export function useChat() {
                     break;
                 }
 
+                case "chart": {
+                    const chartData: ChartData = {
+                        image_base64: data.image_base64 as string,
+                        chart_type: data.chart_type as string,
+                        summary: data.summary as string,
+                    };
+                    setState((prev) => ({
+                        ...prev,
+                        messages: prev.messages.map((msg) =>
+                            msg.id === assistantId
+                                ? { ...msg, charts: [...(msg.charts || []), chartData] }
+                                : msg
+                        ),
+                    }));
+                    break;
+                }
+
                 case "message": {
                     setState((prev) => ({
                         ...prev,
@@ -176,6 +205,7 @@ export function useChat() {
         setState({
             messages: [],
             skillSteps: [],
+            planSteps: [],
             isLoading: false,
             conversationId: generateId(),
             error: null,
@@ -185,6 +215,7 @@ export function useChat() {
     return {
         messages: state.messages,
         skillSteps: state.skillSteps,
+        planSteps: state.planSteps,
         isLoading: state.isLoading,
         error: state.error,
         sendMessage,

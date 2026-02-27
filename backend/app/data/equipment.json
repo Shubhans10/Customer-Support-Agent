@@ -19,6 +19,53 @@
             "WO-2001",
             "WO-2005"
         ],
+        "performance_history": {
+            "daily_oee": [
+                82.1,
+                78.5,
+                85.3,
+                72.5,
+                80.0,
+                76.8,
+                84.2
+            ],
+            "daily_availability": [
+                92,
+                88,
+                94,
+                88,
+                90,
+                85,
+                93
+            ],
+            "daily_output_parts": [
+                42,
+                38,
+                48,
+                35,
+                40,
+                36,
+                45
+            ],
+            "weekly_downtime_hours": [
+                2.5,
+                4.0,
+                1.8,
+                3.2,
+                3.5,
+                5.0,
+                2.0
+            ],
+            "labels": [
+                "Mon",
+                "Tue",
+                "Wed",
+                "Thu",
+                "Fri",
+                "Sat",
+                "Sun"
+            ]
+        },
         "notes": "Running dual work orders. Spindle bearing inspection due at 15000 hours."
     },
     {
@@ -38,7 +85,54 @@
             "tool_wear_pct": 82
         },
         "active_work_orders": [],
-        "notes": "Undergoing scheduled maintenance. Tooling replacement in progress. ETA: 2 days."
+        "performance_history": {
+            "daily_oee": [
+                65.2,
+                58.4,
+                62.0,
+                55.8,
+                48.3,
+                0,
+                0
+            ],
+            "daily_availability": [
+                78,
+                72,
+                75,
+                68,
+                60,
+                0,
+                0
+            ],
+            "daily_output_parts": [
+                85,
+                72,
+                80,
+                68,
+                55,
+                0,
+                0
+            ],
+            "weekly_downtime_hours": [
+                5.5,
+                7.0,
+                6.2,
+                8.0,
+                10.0,
+                24.0,
+                24.0
+            ],
+            "labels": [
+                "Mon",
+                "Tue",
+                "Wed",
+                "Thu",
+                "Fri",
+                "Sat",
+                "Sun"
+            ]
+        },
+        "notes": "Undergoing scheduled maintenance. Tooling replacement in progress. ETA: 2 days. OEE was declining before shutdown."
     },
     {
         "machine_id": "3DP-001",
@@ -57,7 +151,54 @@
             "inert_gas_purity_pct": 99.7
         },
         "active_work_orders": [],
-        "notes": "Available for next job. Recent calibration passed."
+        "performance_history": {
+            "daily_oee": [
+                88.5,
+                91.2,
+                89.0,
+                92.3,
+                90.1,
+                87.4,
+                85.0
+            ],
+            "daily_availability": [
+                95,
+                96,
+                94,
+                97,
+                95,
+                93,
+                91
+            ],
+            "daily_output_parts": [
+                3,
+                3,
+                2,
+                4,
+                3,
+                3,
+                2
+            ],
+            "weekly_downtime_hours": [
+                1.2,
+                1.0,
+                1.5,
+                0.7,
+                1.2,
+                1.7,
+                2.2
+            ],
+            "labels": [
+                "Mon",
+                "Tue",
+                "Wed",
+                "Thu",
+                "Fri",
+                "Sat",
+                "Sun"
+            ]
+        },
+        "notes": "Available for next job. Recent calibration passed. Consistently high OEE."
     },
     {
         "machine_id": "3DP-002",
@@ -76,7 +217,54 @@
             "inert_gas_purity_pct": 99.2
         },
         "active_work_orders": [],
-        "notes": "WARNING: Powder level low (18%). Maintenance overdue by 1 day. Gas purity slightly below optimal."
+        "performance_history": {
+            "daily_oee": [
+                75.0,
+                70.2,
+                68.5,
+                65.0,
+                60.3,
+                55.8,
+                50.1
+            ],
+            "daily_availability": [
+                85,
+                82,
+                80,
+                78,
+                75,
+                70,
+                65
+            ],
+            "daily_output_parts": [
+                2,
+                2,
+                2,
+                1,
+                1,
+                1,
+                1
+            ],
+            "weekly_downtime_hours": [
+                3.6,
+                4.3,
+                4.8,
+                5.3,
+                6.0,
+                7.2,
+                8.4
+            ],
+            "labels": [
+                "Mon",
+                "Tue",
+                "Wed",
+                "Thu",
+                "Fri",
+                "Sat",
+                "Sun"
+            ]
+        },
+        "notes": "WARNING: Powder level low (18%). Maintenance overdue. OEE trending downward — needs immediate attention."
     },
     {
         "machine_id": "LSR-001",
@@ -95,7 +283,54 @@
             "lens_contamination_pct": 8
         },
         "active_work_orders": [],
-        "notes": "Awaiting material for WO-2004. Currently running maintenance cuts."
+        "performance_history": {
+            "daily_oee": [
+                82.0,
+                84.5,
+                81.0,
+                85.2,
+                83.0,
+                80.5,
+                78.0
+            ],
+            "daily_availability": [
+                90,
+                92,
+                89,
+                93,
+                91,
+                88,
+                86
+            ],
+            "daily_output_parts": [
+                15,
+                18,
+                14,
+                20,
+                16,
+                14,
+                12
+            ],
+            "weekly_downtime_hours": [
+                2.4,
+                1.9,
+                2.6,
+                1.7,
+                2.2,
+                2.9,
+                3.4
+            ],
+            "labels": [
+                "Mon",
+                "Tue",
+                "Wed",
+                "Thu",
+                "Fri",
+                "Sat",
+                "Sun"
+            ]
+        },
+        "notes": "Awaiting material for WO-2004. Currently running maintenance cuts. Stable performance."
     },
     {
         "machine_id": "ROB-001",
@@ -123,6 +358,53 @@
         "active_work_orders": [
             "WO-2007"
         ],
+        "performance_history": {
+            "daily_oee": [
+                70.0,
+                68.2,
+                72.5,
+                65.8,
+                69.0,
+                71.5,
+                67.3
+            ],
+            "daily_availability": [
+                85,
+                82,
+                88,
+                80,
+                84,
+                87,
+                82
+            ],
+            "daily_output_parts": [
+                4,
+                3,
+                4,
+                3,
+                3,
+                4,
+                3
+            ],
+            "weekly_downtime_hours": [
+                3.6,
+                4.3,
+                2.9,
+                4.8,
+                3.8,
+                3.1,
+                4.3
+            ],
+            "labels": [
+                "Mon",
+                "Tue",
+                "Wed",
+                "Thu",
+                "Fri",
+                "Sat",
+                "Sun"
+            ]
+        },
         "notes": "Running WO-2007. Torch tip replacement scheduled after current batch."
     }
 ]

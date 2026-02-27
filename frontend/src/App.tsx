@@ -8,7 +8,7 @@ import type { SkillInfo } from "./types";
 import { fetchSkills } from "./utils/api";
 
 function App() {
-  const { messages, skillSteps, isLoading, error, sendMessage, clearChat } =
+  const { messages, skillSteps, planSteps, isLoading, error, sendMessage, clearChat } =
     useChat();
   const [skills, setSkills] = useState<SkillInfo[]>([]);
 
@@ -23,6 +23,7 @@ function App() {
           { name: "Defect Report", description: "Log quality defects and non-conformance reports", icon: "🔍" },
           { name: "Knowledge Base", description: "Search SOPs, safety protocols, and procedures", icon: "📖" },
           { name: "Engineer Escalation", description: "Escalate issues to engineering or management", icon: "🙋" },
+          { name: "Chart Generation", description: "Generate performance charts and visualizations", icon: "📊" },
         ]);
       });
   }, []);
@@ -55,7 +56,7 @@ function App() {
         <ChatInput onSend={sendMessage} isLoading={isLoading} />
       </div>
 
-      <SkillTracePanel steps={skillSteps} />
+      <SkillTracePanel steps={skillSteps} planSteps={planSteps} />
     </div>
   );
 }

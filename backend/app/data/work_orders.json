@@ -10,11 +10,23 @@
         "quantity": 50,
         "completed_quantity": 32,
         "material": "Ti-6Al-4V Titanium",
+        "material_id": "MAT-001",
         "start_date": "2026-02-20",
         "due_date": "2026-03-05",
         "completion_date": null,
         "defects_found": 2,
-        "notes": "Tight tolerance ±0.005mm required. Surface finish Ra 0.8µm."
+        "performance_metrics": {
+            "cycle_time_min": 45.2,
+            "target_cycle_time_min": 40.0,
+            "scrap_rate_pct": 4.0,
+            "oee_pct": 72.5,
+            "availability_pct": 88.0,
+            "performance_pct": 85.3,
+            "quality_pct": 96.0,
+            "energy_kwh_per_part": 12.8,
+            "tool_changes": 6
+        },
+        "notes": "Tight tolerance ±0.005mm required. Surface finish Ra 0.8µm. Cycle time exceeding target due to material hardness."
     },
     {
         "work_order_id": "WO-2002",
@@ -27,11 +39,23 @@
         "quantity": 10,
         "completed_quantity": 10,
         "material": "AlSi10Mg Aluminum Alloy",
+        "material_id": "MAT-003",
         "start_date": "2026-02-15",
         "due_date": "2026-02-22",
         "completion_date": "2026-02-21",
         "defects_found": 0,
-        "notes": "Additive manufacturing with lattice internal structure."
+        "performance_metrics": {
+            "cycle_time_min": 180.0,
+            "target_cycle_time_min": 190.0,
+            "scrap_rate_pct": 0.0,
+            "oee_pct": 91.2,
+            "availability_pct": 95.0,
+            "performance_pct": 98.5,
+            "quality_pct": 100.0,
+            "energy_kwh_per_part": 28.5,
+            "tool_changes": 0
+        },
+        "notes": "Additive manufacturing with lattice internal structure. Completed ahead of schedule with zero defects."
     },
     {
         "work_order_id": "WO-2003",
@@ -44,11 +68,23 @@
         "quantity": 200,
         "completed_quantity": 85,
         "material": "316L Stainless Steel",
+        "material_id": "MAT-002",
         "start_date": "2026-02-18",
         "due_date": "2026-03-10",
         "completion_date": null,
         "defects_found": 7,
-        "notes": "On hold due to tooling wear. Awaiting replacement end mill."
+        "performance_metrics": {
+            "cycle_time_min": 22.5,
+            "target_cycle_time_min": 18.0,
+            "scrap_rate_pct": 3.5,
+            "oee_pct": 58.4,
+            "availability_pct": 72.0,
+            "performance_pct": 80.0,
+            "quality_pct": 96.5,
+            "energy_kwh_per_part": 8.2,
+            "tool_changes": 14
+        },
+        "notes": "On hold due to tooling wear. Awaiting replacement end mill. High defect rate causing OEE drop. Root cause: tool deflection on deep bore."
     },
     {
         "work_order_id": "WO-2004",
@@ -61,11 +97,23 @@
         "quantity": 25,
         "completed_quantity": 0,
         "material": "Carbon Fiber Reinforced Polymer",
+        "material_id": "MAT-009",
         "start_date": null,
         "due_date": "2026-03-15",
         "completion_date": null,
         "defects_found": 0,
-        "notes": "Laser cutting + assembly. Awaiting material delivery."
+        "performance_metrics": {
+            "cycle_time_min": null,
+            "target_cycle_time_min": 12.0,
+            "scrap_rate_pct": null,
+            "oee_pct": null,
+            "availability_pct": null,
+            "performance_pct": null,
+            "quality_pct": null,
+            "energy_kwh_per_part": null,
+            "tool_changes": null
+        },
+        "notes": "Laser cutting + assembly. Awaiting material delivery. Estimated start: March 1."
     },
     {
         "work_order_id": "WO-2005",
@@ -78,11 +126,23 @@
         "quantity": 100,
         "completed_quantity": 67,
         "material": "Case-Hardened Steel 8620",
+        "material_id": "MAT-005",
         "start_date": "2026-02-22",
         "due_date": "2026-02-28",
         "completion_date": null,
         "defects_found": 3,
-        "notes": "Critical timeline. Gear tooth profile tolerance ±0.002mm. Post-machining heat treatment required."
+        "performance_metrics": {
+            "cycle_time_min": 32.8,
+            "target_cycle_time_min": 30.0,
+            "scrap_rate_pct": 3.0,
+            "oee_pct": 78.9,
+            "availability_pct": 92.0,
+            "performance_pct": 91.5,
+            "quality_pct": 97.0,
+            "energy_kwh_per_part": 9.5,
+            "tool_changes": 8
+        },
+        "notes": "Critical timeline. Gear tooth profile tolerance ±0.002mm. Due today — may require overtime shift."
     },
     {
         "work_order_id": "WO-2006",
@@ -95,11 +155,23 @@
         "quantity": 5,
         "completed_quantity": 5,
         "material": "Cobalt-Chrome Alloy",
+        "material_id": "MAT-006",
         "start_date": "2026-02-10",
         "due_date": "2026-02-20",
         "completion_date": "2026-02-18",
         "defects_found": 0,
-        "notes": "FDA compliance required. Full traceability documentation attached."
+        "performance_metrics": {
+            "cycle_time_min": 420.0,
+            "target_cycle_time_min": 480.0,
+            "scrap_rate_pct": 0.0,
+            "oee_pct": 94.8,
+            "availability_pct": 97.0,
+            "performance_pct": 99.5,
+            "quality_pct": 100.0,
+            "energy_kwh_per_part": 65.0,
+            "tool_changes": 0
+        },
+        "notes": "FDA compliance required. Full traceability documentation attached. Perfect quality score."
     },
     {
         "work_order_id": "WO-2007",
@@ -112,11 +184,23 @@
         "quantity": 15,
         "completed_quantity": 8,
         "material": "6061-T6 Aluminum",
+        "material_id": "MAT-007",
         "start_date": "2026-02-24",
         "due_date": "2026-03-12",
         "completion_date": null,
         "defects_found": 1,
-        "notes": "Robotic welding + CNC finishing. Custom fixture design approved."
+        "performance_metrics": {
+            "cycle_time_min": 55.0,
+            "target_cycle_time_min": 50.0,
+            "scrap_rate_pct": 6.7,
+            "oee_pct": 68.2,
+            "availability_pct": 85.0,
+            "performance_pct": 90.9,
+            "quality_pct": 93.3,
+            "energy_kwh_per_part": 4.2,
+            "tool_changes": 3
+        },
+        "notes": "Robotic welding + CNC finishing. One bracket had weld porosity — reworked. Custom fixture design approved."
     },
     {
         "work_order_id": "WO-2008",
@@ -129,10 +213,22 @@
         "quantity": 2,
         "completed_quantity": 0,
         "material": "H13 Tool Steel",
+        "material_id": "MAT-008",
         "start_date": null,
         "due_date": "2026-03-01",
         "completion_date": null,
         "defects_found": 0,
-        "notes": "Cancelled by customer. Design revision required."
+        "performance_metrics": {
+            "cycle_time_min": null,
+            "target_cycle_time_min": 600.0,
+            "scrap_rate_pct": null,
+            "oee_pct": null,
+            "availability_pct": null,
+            "performance_pct": null,
+            "quality_pct": null,
+            "energy_kwh_per_part": null,
+            "tool_changes": null
+        },
+        "notes": "Cancelled by customer. Design revision required for conformal cooling channels."
     }
 ]
