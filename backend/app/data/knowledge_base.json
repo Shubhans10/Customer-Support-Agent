@@ -1,0 +1,74 @@
+[
+    {
+        "id": "KB-001",
+        "question": "What is the standard CNC startup procedure?",
+        "answer": "1) Power on the machine and controller. 2) Home all axes. 3) Check coolant level and top off if below 50%. 4) Verify tool offsets in the tool library. 5) Run the warm-up program (O9000) for 10 minutes. 6) Load the work order program and verify with a dry run. 7) Set work coordinates using the edge finder or probe.",
+        "category": "sop"
+    },
+    {
+        "id": "KB-002",
+        "question": "How do I report a machine malfunction?",
+        "answer": "Press the E-STOP button if there is immediate danger. Log the issue in the MES system under 'Equipment Alerts'. Note the machine ID, error code, and a description. Notify the shift supervisor immediately. Do not attempt to restart the machine until cleared by maintenance.",
+        "category": "safety"
+    },
+    {
+        "id": "KB-003",
+        "question": "What are the PPE requirements on the manufacturing floor?",
+        "answer": "Required PPE: Safety glasses with side shields at all times. Steel-toed boots. Hearing protection in zones marked >85dB. Cut-resistant gloves when handling raw material. Face shields when operating grinders or laser equipment. No loose clothing, jewelry, or long hair near rotating machinery.",
+        "category": "safety"
+    },
+    {
+        "id": "KB-004",
+        "question": "What is the quality inspection process for CNC parts?",
+        "answer": "Every part undergoes: 1) Visual inspection for surface defects. 2) CMM (Coordinate Measuring Machine) measurement for critical dimensions. 3) Surface roughness check with profilometer. 4) First article inspection (FAI) for new setups — full dimensional report required. 5) In-process checks every 25 parts. 6) SPC data entry for tracked dimensions.",
+        "category": "quality"
+    },
+    {
+        "id": "KB-005",
+        "question": "How do I change a tool on the CNC machine?",
+        "answer": "1) Switch to MDI mode. 2) Bring the spindle to the tool change position (G28). 3) Open the tool magazine. 4) Remove the worn tool and insert the new one in the correct pocket. 5) Update tool offsets (length and diameter) using the presetter or touch-off method. 6) Verify with a test cut on scrap material.",
+        "category": "sop"
+    },
+    {
+        "id": "KB-006",
+        "question": "What are the metal 3D printing safety protocols?",
+        "answer": "Metal powder is flammable — no open flames or sparks near the build chamber. Always use a respirator (P100 filter) when handling powder. Wear nitrile gloves. Ground yourself before touching the powder container. Keep the inert gas (argon/nitrogen) supply connected during builds. Never open the chamber during active printing.",
+        "category": "safety"
+    },
+    {
+        "id": "KB-007",
+        "question": "How do I handle a tool breakage during machining?",
+        "answer": "1) Press Feed Hold or E-STOP. 2) Do NOT retract the spindle manually. 3) Note the exact program line and position. 4) Call the shift supervisor and log the incident. 5) Inspect the workpiece for damage — quarantine if defective. 6) Replace the tool, re-zero, and resume from the last known good position.",
+        "category": "sop"
+    },
+    {
+        "id": "KB-008",
+        "question": "What is the preventive maintenance schedule for CNC machines?",
+        "answer": "Daily: Check coolant, chip removal, way lube level. Weekly: Clean filters, check hydraulic pressure, inspect belts. Monthly: Lubricate ball screws, check spindle runout, calibrate probes. Quarterly: Full geometric alignment check, replace coolant. Annually: Spindle bearing inspection, servo motor evaluation, full calibration.",
+        "category": "maintenance"
+    },
+    {
+        "id": "KB-009",
+        "question": "What materials can the metal 3D printers process?",
+        "answer": "EOS M 290 (3DP-001): Ti-6Al-4V, AlSi10Mg, Inconel 718, 316L Stainless, Maraging Steel. Concept Laser M2 (3DP-002): CoCr, Ti-6Al-4V, AlSi10Mg, 316L Stainless. Layer thickness: 20-60µm. Build volume varies by machine — check the spec sheet posted on each machine.",
+        "category": "materials"
+    },
+    {
+        "id": "KB-010",
+        "question": "How do I calibrate the laser cutter?",
+        "answer": "1) Run the alignment beam test (Program L-CAL-001). 2) Check focus height with the capacitive sensor. 3) Cut a test pattern on scrap at current settings. 4) Measure kerf width — should be within ±0.05mm of spec. 5) Adjust beam offset if needed. 6) Log calibration in the maintenance record.",
+        "category": "sop"
+    },
+    {
+        "id": "KB-011",
+        "question": "What is the defect classification system?",
+        "answer": "Class A (Critical): Affects safety or function — part must be scrapped. Class B (Major): Out of spec but potentially reworkable — engineering review required. Class C (Minor): Cosmetic defect within tolerance — may be accepted with concession. All defects must be logged in the quality system with photos and measurements.",
+        "category": "quality"
+    },
+    {
+        "id": "KB-012",
+        "question": "How do I request material from the stockroom?",
+        "answer": "Submit a material request in the MES system referencing the work order ID. Include material type, grade, quantity, and required dimensions. Standard materials are available within 2 hours. Special alloys (titanium, Inconel) require 24-48 hour lead time from the secure vault. Always verify material cert matches the work order spec.",
+        "category": "materials"
+    }
+]

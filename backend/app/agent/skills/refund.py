@@ -1,120 +1,86 @@
 import json
 import os
-from datetime import datetime, timedelta
+import random
+from datetime import datetime
 from langchain_core.tools import tool
 
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data")
 
 
-def _load_orders() -> list[dict]:
-    with open(os.path.join(DATA_DIR, "orders.json"), "r") as f:
+def _load_work_orders() -> list[dict]:
+    with open(os.path.join(DATA_DIR, "work_orders.json"), "r") as f:
         return json.load(f)
 
 
 def _load_policies() -> dict:
-    with open(os.path.join(DATA_DIR, "policies.json"), "r") as f:
+    with open(os.path.join(DATA_DIR, "manufacturing_policies.json"), "r") as f:
         return json.load(f)
 
 
 @tool
-def process_refund(order_id: str, reason: str) -> str:
-    """Process a refund request for a given order.
-    Use this tool when a customer wants to return an item or get a refund.
-    Checks refund eligibility based on store policies and order status.
-    Provide the order ID (e.g., 'ORD-1001') and the reason for the refund.
+def defect_report(work_order_id: str, defect_description: str, severity: str = "major") -> str:
+    """Log a quality defect or issue against a specific work order.
+    Use this tool when someone reports a defect, quality issue, or
+    non-conformance on a manufactured part.
+    Provide the work order ID (e.g., 'WO-2001'), a description of the defect,
+    and the severity level: 'critical', 'major', or 'minor'.
     """
-    orders = _load_orders()
+    work_orders = _load_work_orders()
     policies = _load_policies()
-    refund_policy = policies["refund_policy"]
+    quality_policy = policies["quality_policy"]
 
-    # Find the order
-    order = None
-    for o in orders:
-        if o["order_id"].upper() == order_id.upper():
-            order = o
+    # Find the work order
+    wo = None
+    for w in work_orders:
+        if w["work_order_id"].upper() == work_order_id.upper():
+            wo = w
             break
 
-    if not order:
+    if not wo:
         return json.dumps({
-            "eligible": False,
-            "reason": f"Order {order_id} not found. Please verify the order ID."
+            "logged": False,
+            "reason": f"Work order {work_order_id} not found. Please verify the ID."
         })
 
-    # Check order status
-    if order["status"] == "cancelled":
+    if wo["status"] == "cancelled":
         return json.dumps({
-            "eligible": False,
-            "order_id": order_id,
-            "reason": "This order has already been cancelled. No refund is needed."
+            "logged": False,
+            "reason": f"Work order {work_order_id} has been cancelled. Cannot log defects against cancelled orders."
         })
 
-    if order["status"] == "returned":
-        return json.dumps({
-            "eligible": False,
-            "order_id": order_id,
-            "reason": "This order has already been returned and refunded."
-        })
+    ncr_number = f"NCR-{random.randint(10000, 99999)}"
+    severity_lower = severity.lower()
+    defect_class = quality_policy["defect_classes"].get(severity_lower, quality_policy["defect_classes"]["major"])
 
-    if order["status"] == "processing":
-        return json.dumps({
-            "eligible": True,
-            "order_id": order_id,
-            "action": "cancel_order",
-            "summary": (
-                f"Order {order_id} is still being processed. "
-                f"We can cancel it for a full refund of ${order['total']:.2f}. "
-                f"Refund will be processed within 5-7 business days."
-            ),
-            "refund_amount": order["total"]
-        })
+    # Determine action based on severity
+    actions = {
+        "critical": "Part must be SCRAPPED. Production PAUSED for root cause analysis. Engineering review required within 2 hours.",
+        "major": "Part QUARANTINED for engineering review. May be reworkable. Corrective action plan due within 24 hours.",
+        "minor": "Part flagged for concession review. Production may continue. Document with photos."
+    }
+    action = actions.get(severity_lower, actions["major"])
 
-    # Check return window for delivered orders
-    if order["status"] == "delivered" and order["delivery_date"]:
-        delivery_date = datetime.strptime(order["delivery_date"], "%Y-%m-%d")
-        days_since = (datetime.now() - delivery_date).days
-        window = refund_policy["standard_return_window_days"]
-
-        if days_since > window:
-            return json.dumps({
-                "eligible": False,
-                "order_id": order_id,
-                "reason": (
-                    f"The {window}-day return window has expired. "
-                    f"Item was delivered {days_since} days ago on {order['delivery_date']}."
-                )
-            })
-
-        return json.dumps({
-            "eligible": True,
-            "order_id": order_id,
-            "action": "initiate_return",
-            "summary": (
-                f"Order {order_id} is eligible for a refund. "
-                f"Delivered {days_since} days ago (within the {window}-day window). "
-                f"Refund amount: ${order['total']:.2f}. "
-                f"Reason: {reason}. "
-                f"A return shipping label will be emailed to {order['customer_email']}."
-            ),
-            "refund_amount": order["total"],
-            "return_label_sent_to": order["customer_email"]
-        })
-
-    # Shipped but not delivered
-    if order["status"] == "shipped":
-        return json.dumps({
-            "eligible": True,
-            "order_id": order_id,
-            "action": "intercept_and_refund",
-            "summary": (
-                f"Order {order_id} is currently in transit. "
-                f"We can attempt to intercept the shipment for a full refund of ${order['total']:.2f}. "
-                f"If interception fails, you can return it once delivered."
-            ),
-            "refund_amount": order["total"]
-        })
+    # Check if corrective action threshold is reached
+    total_defects = wo["defects_found"] + 1
+    threshold_reached = total_defects >= 3
 
     return json.dumps({
-        "eligible": False,
-        "order_id": order_id,
-        "reason": f"Unable to process refund for order status: {order['status']}."
-    })
+        "logged": True,
+        "ncr_number": ncr_number,
+        "work_order_id": work_order_id.upper(),
+        "product_name": wo["product_name"],
+        "machine": wo["machine_assigned"],
+        "operator": wo["operator"],
+        "severity": severity_lower,
+        "classification": defect_class,
+        "defect_description": defect_description,
+        "action_required": action,
+        "total_defects_on_wo": total_defects,
+        "corrective_action_triggered": threshold_reached,
+        "created_at": datetime.now().isoformat(),
+        "summary": (
+            f"Defect report {ncr_number} logged against {work_order_id}. "
+            f"Severity: {severity_lower.upper()}. {action} "
+            + (f"⚠️ Corrective action threshold reached ({total_defects} defects on this WO)." if threshold_reached else "")
+        )
+    }, indent=2)

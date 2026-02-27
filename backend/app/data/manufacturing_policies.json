@@ -1,0 +1,107 @@
+{
+    "quality_policy": {
+        "inspection_frequency": "Every 25 parts for in-process, 100% for critical dimensions",
+        "first_article_required": true,
+        "defect_classes": {
+            "critical": "Part must be scrapped. Safety/function impact. NCR required.",
+            "major": "Engineering review required. May be reworkable.",
+            "minor": "Cosmetic issue within tolerance. May be accepted with concession."
+        },
+        "corrective_action_threshold": "3 or more defects of the same type within a single work order",
+        "documentation_requirements": [
+            "Digital photos of all defects",
+            "CMM measurement report",
+            "Root cause analysis for Class A and B defects",
+            "Corrective action plan within 24 hours"
+        ]
+    },
+    "safety_policy": {
+        "ppe_requirements": [
+            "Safety glasses with side shields — all areas",
+            "Steel-toed boots — all areas",
+            "Hearing protection — zones marked >85dB",
+            "Cut-resistant gloves — material handling",
+            "Respirator (P100) — additive manufacturing / powder handling",
+            "Face shield — grinding, laser operation"
+        ],
+        "incident_reporting": "All incidents must be reported within 1 hour to the shift supervisor and logged in the safety system",
+        "emergency_stop_protocol": "Press E-STOP → Evacuate if needed → Call supervisor → Do NOT restart until cleared by maintenance",
+        "lockout_tagout_required": true
+    },
+    "maintenance_policy": {
+        "preventive_schedule": {
+            "daily": [
+                "Coolant level check",
+                "Chip removal",
+                "Way lube verification"
+            ],
+            "weekly": [
+                "Filter cleaning",
+                "Hydraulic pressure check",
+                "Belt inspection"
+            ],
+            "monthly": [
+                "Ball screw lubrication",
+                "Spindle runout check",
+                "Probe calibration"
+            ],
+            "quarterly": [
+                "Full geometric alignment",
+                "Coolant replacement"
+            ],
+            "annually": [
+                "Spindle bearing inspection",
+                "Servo motor evaluation",
+                "Full calibration"
+            ]
+        },
+        "downtime_escalation": {
+            "under_2_hours": "Maintenance team handles internally",
+            "2_to_8_hours": "Notify production manager, reschedule affected work orders",
+            "over_8_hours": "Escalate to plant manager, activate backup machine protocol"
+        }
+    },
+    "escalation_policy": {
+        "auto_escalate_conditions": [
+            "Critical defect detected on safety-critical part",
+            "Machine downtime exceeds 4 hours",
+            "Work order behind schedule by more than 2 days",
+            "Material certification mismatch",
+            "Operator requests engineering support"
+        ],
+        "departments": [
+            {
+                "name": "Manufacturing Engineering",
+                "handles": [
+                    "process issues",
+                    "tooling problems",
+                    "program optimization"
+                ]
+            },
+            {
+                "name": "Quality Engineering",
+                "handles": [
+                    "defect analysis",
+                    "NCR review",
+                    "specification questions"
+                ]
+            },
+            {
+                "name": "Maintenance",
+                "handles": [
+                    "machine breakdowns",
+                    "sensor alerts",
+                    "calibration"
+                ]
+            },
+            {
+                "name": "Production Management",
+                "handles": [
+                    "scheduling conflicts",
+                    "priority changes",
+                    "resource allocation"
+                ]
+            }
+        ]
+    }
+}

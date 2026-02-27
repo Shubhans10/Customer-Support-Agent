@@ -5,41 +5,41 @@ from langchain_core.messages import SystemMessage
 
 from app.agent.state import AgentState
 from app.agent.prompts import SYSTEM_PROMPT
-from app.agent.skills.order_lookup import order_lookup
-from app.agent.skills.refund import process_refund
-from app.agent.skills.faq_search import faq_search
-from app.agent.skills.escalation import escalate_to_human
-from app.agent.skills.sentiment import analyze_sentiment
+from app.agent.skills.order_lookup import work_order_lookup
+from app.agent.skills.refund import defect_report
+from app.agent.skills.faq_search import knowledge_base_search
+from app.agent.skills.escalation import escalate_to_engineer
+from app.agent.skills.sentiment import equipment_status
 from app.config import OPENAI_API_KEY, OPENAI_MODEL, TEMPERATURE
 
 # All agent skills (tools)
-tools = [order_lookup, process_refund, faq_search, escalate_to_human, analyze_sentiment]
+tools = [work_order_lookup, equipment_status, defect_report, knowledge_base_search, escalate_to_engineer]
 
 SKILL_DESCRIPTIONS = {
-    "order_lookup": {
-        "name": "Order Lookup",
-        "description": "Search for order details by order ID or customer name",
-        "icon": "📦"
+    "work_order_lookup": {
+        "name": "Work Order Lookup",
+        "description": "Search work orders by ID, product, customer, or status",
+        "icon": "📋"
     },
-    "process_refund": {
-        "name": "Refund Processing",
-        "description": "Process refund requests based on store policies",
-        "icon": "💳"
+    "equipment_status": {
+        "name": "Equipment Status",
+        "description": "Check machine health, sensors, and maintenance schedules",
+        "icon": "🔧"
     },
-    "faq_search": {
-        "name": "FAQ Search",
-        "description": "Search the knowledge base for answers to common questions",
+    "defect_report": {
+        "name": "Defect Report",
+        "description": "Log quality defects and non-conformance reports",
+        "icon": "🔍"
+    },
+    "knowledge_base_search": {
+        "name": "Knowledge Base",
+        "description": "Search SOPs, safety protocols, and procedures",
         "icon": "📖"
     },
-    "escalate_to_human": {
-        "name": "Escalation",
-        "description": "Escalate complex issues to a human support agent",
+    "escalate_to_engineer": {
+        "name": "Engineer Escalation",
+        "description": "Escalate issues to engineering or management",
         "icon": "🙋"
-    },
-    "analyze_sentiment": {
-        "name": "Sentiment Analysis",
-        "description": "Analyze customer emotional tone to adjust response",
-        "icon": "🎭"
     }
 }
 

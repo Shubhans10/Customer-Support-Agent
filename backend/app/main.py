@@ -10,18 +10,19 @@ from app.models import ChatRequest, SkillInfo
 from app.agent.graph import agent_graph, SKILL_DESCRIPTIONS
 
 app = FastAPI(
-    title="Customer Support Agent API",
-    description="AI-powered customer support agent with observable skill execution",
+    title="AMM Assist API",
+    description="AI-powered Advanced Manufacturing operations assistant with observable skill execution",
     version="1.0.0",
 )
 
 # CORS for React frontend
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],
-    allow_credentials=True,
+    allow_origins=["*"],
+    allow_credentials=False,
     allow_methods=["*"],
     allow_headers=["*"],
+    expose_headers=["X-Conversation-Id"],
 )
 
 # In-memory conversation store (POC only)

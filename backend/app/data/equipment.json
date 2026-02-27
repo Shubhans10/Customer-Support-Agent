@@ -1,0 +1,128 @@
+[
+    {
+        "machine_id": "CNC-001",
+        "name": "Haas VF-4SS 5-Axis CNC Mill",
+        "type": "CNC Milling",
+        "status": "operational",
+        "location": "Bay A - Cell 1",
+        "last_maintenance": "2026-02-15",
+        "next_maintenance": "2026-03-15",
+        "utilization_pct": 87,
+        "hours_run": 14520,
+        "sensor_readings": {
+            "spindle_temp_c": 42,
+            "vibration_mm_s": 1.2,
+            "coolant_level_pct": 78,
+            "tool_wear_pct": 35
+        },
+        "active_work_orders": [
+            "WO-2001",
+            "WO-2005"
+        ],
+        "notes": "Running dual work orders. Spindle bearing inspection due at 15000 hours."
+    },
+    {
+        "machine_id": "CNC-002",
+        "name": "DMG Mori NLX 2500 CNC Lathe",
+        "type": "CNC Turning",
+        "status": "maintenance",
+        "location": "Bay A - Cell 2",
+        "last_maintenance": "2026-02-25",
+        "next_maintenance": "2026-03-25",
+        "utilization_pct": 0,
+        "hours_run": 11230,
+        "sensor_readings": {
+            "spindle_temp_c": 22,
+            "vibration_mm_s": 0.0,
+            "coolant_level_pct": 45,
+            "tool_wear_pct": 82
+        },
+        "active_work_orders": [],
+        "notes": "Undergoing scheduled maintenance. Tooling replacement in progress. ETA: 2 days."
+    },
+    {
+        "machine_id": "3DP-001",
+        "name": "EOS M 290 Metal 3D Printer",
+        "type": "Additive Manufacturing (DMLS)",
+        "status": "operational",
+        "location": "Bay B - Additive Cell",
+        "last_maintenance": "2026-02-10",
+        "next_maintenance": "2026-03-10",
+        "utilization_pct": 62,
+        "hours_run": 8450,
+        "sensor_readings": {
+            "chamber_temp_c": 38,
+            "laser_power_w": 370,
+            "powder_level_pct": 55,
+            "inert_gas_purity_pct": 99.7
+        },
+        "active_work_orders": [],
+        "notes": "Available for next job. Recent calibration passed."
+    },
+    {
+        "machine_id": "3DP-002",
+        "name": "Concept Laser M2 Metal Printer",
+        "type": "Additive Manufacturing (SLM)",
+        "status": "warning",
+        "location": "Bay B - Additive Cell",
+        "last_maintenance": "2026-01-28",
+        "next_maintenance": "2026-02-28",
+        "utilization_pct": 45,
+        "hours_run": 6780,
+        "sensor_readings": {
+            "chamber_temp_c": 41,
+            "laser_power_w": 355,
+            "powder_level_pct": 18,
+            "inert_gas_purity_pct": 99.2
+        },
+        "active_work_orders": [],
+        "notes": "WARNING: Powder level low (18%). Maintenance overdue by 1 day. Gas purity slightly below optimal."
+    },
+    {
+        "machine_id": "LSR-001",
+        "name": "Trumpf TruLaser 3030 Fiber Laser",
+        "type": "Laser Cutting",
+        "status": "operational",
+        "location": "Bay C - Fabrication",
+        "last_maintenance": "2026-02-20",
+        "next_maintenance": "2026-03-20",
+        "utilization_pct": 71,
+        "hours_run": 9200,
+        "sensor_readings": {
+            "laser_source_temp_c": 36,
+            "beam_alignment_mm": 0.02,
+            "assist_gas_pressure_bar": 12,
+            "lens_contamination_pct": 8
+        },
+        "active_work_orders": [],
+        "notes": "Awaiting material for WO-2004. Currently running maintenance cuts."
+    },
+    {
+        "machine_id": "ROB-001",
+        "name": "FANUC ARC Mate 120iD Welding Robot",
+        "type": "Robotic Welding",
+        "status": "operational",
+        "location": "Bay D - Assembly",
+        "last_maintenance": "2026-02-12",
+        "next_maintenance": "2026-03-12",
+        "utilization_pct": 53,
+        "hours_run": 5340,
+        "sensor_readings": {
+            "joint_temps_c": [
+                34,
+                36,
+                33,
+                35,
+                32,
+                34
+            ],
+            "wire_feed_rate_m_min": 8.5,
+            "shielding_gas_flow_l_min": 15,
+            "weld_current_a": 220
+        },
+        "active_work_orders": [
+            "WO-2007"
+        ],
+        "notes": "Running WO-2007. Torch tip replacement scheduled after current batch."
+    }
+]

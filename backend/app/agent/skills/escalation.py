@@ -5,26 +5,26 @@ from langchain_core.tools import tool
 
 
 @tool
-def escalate_to_human(reason: str, priority: str = "medium", department: str = "General Support") -> str:
-    """Escalate the conversation to a human support agent.
+def escalate_to_engineer(reason: str, priority: str = "medium", department: str = "Manufacturing Engineering") -> str:
+    """Escalate an issue to a specialist engineer or supervisor.
     Use this tool when:
-    - The customer explicitly asks to speak with a human/manager
-    - The issue is too complex to resolve automatically
-    - The customer is very frustrated or angry
-    - The issue involves a policy exception
-    Provide a clear reason for escalation, priority level (low/medium/high/urgent),
-    and the target department (Billing, Technical Support, Shipping, Management).
+    - The issue requires engineering expertise (tooling, process, design)
+    - A critical defect or safety concern is identified
+    - Machine downtime exceeds normal resolution time
+    - The operator or user requests specialized support
+    Provide a clear reason, priority level (low/medium/high/critical),
+    and target department (Manufacturing Engineering, Quality Engineering, Maintenance, Production Management).
     """
     ticket_number = f"ESC-{random.randint(10000, 99999)}"
 
-    wait_times = {
-        "low": "30-45 minutes",
-        "medium": "15-20 minutes",
-        "high": "5-10 minutes",
-        "urgent": "1-3 minutes"
+    response_times = {
+        "low": "2-4 hours",
+        "medium": "30-60 minutes",
+        "high": "15-30 minutes",
+        "critical": "Immediate (5-10 minutes)"
     }
 
-    estimated_wait = wait_times.get(priority.lower(), "15-20 minutes")
+    estimated_response = response_times.get(priority.lower(), "30-60 minutes")
 
     return json.dumps({
         "escalated": True,
@@ -32,12 +32,13 @@ def escalate_to_human(reason: str, priority: str = "medium", department: str = "
         "department": department,
         "priority": priority,
         "reason": reason,
-        "estimated_wait_time": estimated_wait,
+        "estimated_response_time": estimated_response,
         "created_at": datetime.now().isoformat(),
         "summary": (
-            f"Escalation ticket {ticket_number} has been created. "
-            f"Department: {department}. Priority: {priority}. "
-            f"Estimated wait time: {estimated_wait}. "
-            f"A human agent will review your case shortly."
+            f"Escalation ticket {ticket_number} created. "
+            f"Department: {department}. Priority: {priority.upper()}. "
+            f"Estimated response: {estimated_response}. "
+            f"Reason: {reason}. "
+            f"An engineer will be dispatched to assist."
         )
     }, indent=2)

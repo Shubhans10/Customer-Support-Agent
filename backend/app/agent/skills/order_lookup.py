@@ -5,58 +5,89 @@ from langchain_core.tools import tool
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data")
 
 
-def _load_orders() -> list[dict]:
-    with open(os.path.join(DATA_DIR, "orders.json"), "r") as f:
+def _load_work_orders() -> list[dict]:
+    with open(os.path.join(DATA_DIR, "work_orders.json"), "r") as f:
         return json.load(f)
 
 
 @tool
-def order_lookup(query: str) -> str:
-    """Look up order information by order ID or customer name.
-    Use this tool when the customer asks about their order status,
-    tracking information, delivery date, or order details.
-    The query can be an order ID (e.g., 'ORD-1001') or a customer name (e.g., 'Alice Johnson').
+def work_order_lookup(query: str) -> str:
+    """Look up work order information by work order ID, product name, customer, or status.
+    Use this tool when someone asks about production status, work order details,
+    due dates, or progress on manufacturing jobs.
+    The query can be a work order ID (e.g., 'WO-2001'), product name, customer name,
+    or a status filter (e.g., 'in_progress', 'on_hold', 'completed').
     """
-    orders = _load_orders()
+    work_orders = _load_work_orders()
     query_lower = query.lower().strip()
 
-    # Search by order ID
-    for order in orders:
-        if order["order_id"].lower() == query_lower:
+    # Search by work order ID
+    for wo in work_orders:
+        if wo["work_order_id"].lower() == query_lower:
+            progress = (wo["completed_quantity"] / wo["quantity"] * 100) if wo["quantity"] > 0 else 0
             return json.dumps({
                 "found": True,
-                "order": order,
+                "work_order": wo,
+                "progress_pct": round(progress, 1),
                 "summary": (
-                    f"Order {order['order_id']} for {order['customer_name']}: "
-                    f"Status is '{order['status']}'. "
-                    f"Items: {', '.join(i['name'] for i in order['items'])}. "
-                    f"Total: ${order['total']:.2f}. "
-                    f"Ordered on {order['order_date']}."
-                    + (f" Delivered on {order['delivery_date']}." if order['delivery_date'] else "")
-                    + (f" Tracking: {order['tracking_number']}." if order['tracking_number'] else "")
+                    f"Work Order {wo['work_order_id']}: {wo['product_name']} for {wo['customer']}. "
+                    f"Status: {wo['status'].upper()}. Priority: {wo['priority']}. "
+                    f"Progress: {wo['completed_quantity']}/{wo['quantity']} ({progress:.0f}%). "
+                    f"Machine: {wo['machine_assigned']}. Operator: {wo['operator']}. "
+                    f"Material: {wo['material']}. "
+                    + (f"Due: {wo['due_date']}. " if wo['due_date'] else "")
+                    + (f"Defects: {wo['defects_found']}. " if wo['defects_found'] > 0 else "No defects. ")
+                    + (f"Notes: {wo['notes']}" if wo['notes'] else "")
                 )
             }, indent=2)
 
-    # Search by customer name
-    matches = [o for o in orders if query_lower in o["customer_name"].lower()]
-    if matches:
+    # Search by status
+    status_matches = [wo for wo in work_orders if query_lower == wo["status"].lower()]
+    if status_matches:
         results = []
-        for order in matches:
+        for wo in status_matches:
+            progress = (wo["completed_quantity"] / wo["quantity"] * 100) if wo["quantity"] > 0 else 0
             results.append({
-                "order_id": order["order_id"],
-                "status": order["status"],
-                "total": order["total"],
-                "order_date": order["order_date"],
-                "items": [i["name"] for i in order["items"]]
+                "work_order_id": wo["work_order_id"],
+                "product_name": wo["product_name"],
+                "customer": wo["customer"],
+                "priority": wo["priority"],
+                "progress_pct": round(progress, 1),
+                "due_date": wo["due_date"]
             })
         return json.dumps({
             "found": True,
             "count": len(results),
-            "orders": results,
-            "summary": f"Found {len(results)} order(s) for '{query}'."
+            "work_orders": results,
+            "summary": f"Found {len(results)} work order(s) with status '{query}'."
+        }, indent=2)
+
+    # Search by customer or product name
+    text_matches = [
+        wo for wo in work_orders
+        if query_lower in wo["customer"].lower()
+        or query_lower in wo["product_name"].lower()
+    ]
+    if text_matches:
+        results = []
+        for wo in text_matches:
+            progress = (wo["completed_quantity"] / wo["quantity"] * 100) if wo["quantity"] > 0 else 0
+            results.append({
+                "work_order_id": wo["work_order_id"],
+                "product_name": wo["product_name"],
+                "customer": wo["customer"],
+                "status": wo["status"],
+                "priority": wo["priority"],
+                "progress_pct": round(progress, 1)
+            })
+        return json.dumps({
+            "found": True,
+            "count": len(results),
+            "work_orders": results,
+            "summary": f"Found {len(results)} work order(s) matching '{query}'."
         }, indent=2)
 
     return json.dumps({
         "found": False,
-        "summary": f"No orders found matching '{query}'. Please verify the order ID (format: ORD-XXXX) or customer name."
+        "summary": f"No work orders found matching '{query}'. Try a work order ID (WO-XXXX), status, customer, or product name."
     })

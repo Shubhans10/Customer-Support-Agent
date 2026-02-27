@@ -5,30 +5,31 @@ from langchain_core.tools import tool
 DATA_DIR = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(__file__))), "data")
 
 
-def _load_faqs() -> list[dict]:
-    with open(os.path.join(DATA_DIR, "faqs.json"), "r") as f:
+def _load_knowledge_base() -> list[dict]:
+    with open(os.path.join(DATA_DIR, "knowledge_base.json"), "r") as f:
         return json.load(f)
 
 
 @tool
-def faq_search(query: str) -> str:
-    """Search the FAQ knowledge base for answers to common customer questions.
-    Use this tool when the customer asks general questions about policies,
-    shipping, payments, account management, or product information.
-    Provide a natural language query describing what the customer wants to know.
+def knowledge_base_search(query: str) -> str:
+    """Search the manufacturing knowledge base for SOPs, safety protocols,
+    quality procedures, maintenance guides, and material specifications.
+    Use this tool when someone asks about procedures, safety requirements,
+    how to operate equipment, or any manufacturing-related question.
+    Provide a natural language query describing what information is needed.
     """
-    faqs = _load_faqs()
+    entries = _load_knowledge_base()
     query_lower = query.lower()
     query_words = set(query_lower.split())
 
-    # Score each FAQ by keyword overlap
+    # Score each entry by keyword overlap
     scored = []
-    for faq in faqs:
-        faq_text = (faq["question"] + " " + faq["answer"] + " " + faq["category"]).lower()
-        faq_words = set(faq_text.split())
-        overlap = len(query_words & faq_words)
+    for entry in entries:
+        entry_text = (entry["question"] + " " + entry["answer"] + " " + entry["category"]).lower()
+        entry_words = set(entry_text.split())
+        overlap = len(query_words & entry_words)
         if overlap > 0:
-            scored.append((overlap, faq))
+            scored.append((overlap, entry))
 
     scored.sort(key=lambda x: x[0], reverse=True)
     top_results = scored[:3]
@@ -36,20 +37,21 @@ def faq_search(query: str) -> str:
     if not top_results:
         return json.dumps({
             "found": False,
-            "summary": "No matching FAQ entries found for your question. Let me try to help you directly or escalate to a specialist."
+            "summary": "No matching knowledge base entries found. Consider escalating to engineering for specialized guidance."
         })
 
     results = []
-    for _, faq in top_results:
+    for _, entry in top_results:
         results.append({
-            "question": faq["question"],
-            "answer": faq["answer"],
-            "category": faq["category"]
+            "id": entry["id"],
+            "question": entry["question"],
+            "answer": entry["answer"],
+            "category": entry["category"]
         })
 
     return json.dumps({
         "found": True,
         "count": len(results),
         "results": results,
-        "summary": f"Found {len(results)} relevant FAQ entries."
+        "summary": f"Found {len(results)} relevant knowledge base entries."
     }, indent=2)
