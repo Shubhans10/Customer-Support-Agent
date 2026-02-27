@@ -1,0 +1,90 @@
+{
+    "refund_policy": {
+        "standard_return_window_days": 30,
+        "electronics_return_window_days": 15,
+        "conditions": [
+            "Item must be in original condition and packaging",
+            "Proof of purchase (order ID or receipt) is required",
+            "Items marked as 'final sale' are not eligible for refund",
+            "Damaged items can be returned within 48 hours of delivery"
+        ],
+        "refund_methods": [
+            {
+                "method": "original_payment",
+                "processing_time": "5-7 business days"
+            },
+            {
+                "method": "store_credit",
+                "processing_time": "instant"
+            }
+        ],
+        "non_refundable_items": [
+            "Gift cards",
+            "Downloadable software",
+            "Personalized/custom items",
+            "Items marked as final sale"
+        ]
+    },
+    "shipping_policy": {
+        "free_shipping_threshold": 50.00,
+        "shipping_options": [
+            {
+                "type": "standard",
+                "days": "5-7",
+                "cost": 5.99
+            },
+            {
+                "type": "express",
+                "days": "2-3",
+                "cost": 12.99
+            },
+            {
+                "type": "overnight",
+                "days": "1",
+                "cost": 24.99
+            }
+        ]
+    },
+    "escalation_policy": {
+        "auto_escalate_conditions": [
+            "Customer requests to speak with manager",
+            "Issue unresolved after 3 interactions",
+            "Order value exceeds $500",
+            "Customer expresses extreme dissatisfaction"
+        ],
+        "departments": [
+            {
+                "name": "Billing",
+                "handles": [
+                    "payment issues",
+                    "refund disputes",
+                    "charges"
+                ]
+            },
+            {
+                "name": "Technical Support",
+                "handles": [
+                    "product issues",
+                    "defects",
+                    "warranty"
+                ]
+            },
+            {
+                "name": "Shipping",
+                "handles": [
+                    "delivery issues",
+                    "lost packages",
+                    "tracking"
+                ]
+            },
+            {
+                "name": "Management",
+                "handles": [
+                    "complaints",
+                    "escalations",
+                    "policy exceptions"
+                ]
+            }
+        ]
+    }
+}
