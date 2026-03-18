@@ -1,6 +1,6 @@
 from langgraph.graph import StateGraph, END
 from langgraph.prebuilt import ToolNode
-from langchain_openai import ChatOpenAI
+from langchain_openai import ChatOpenAI, AzureChatOpenAI
 from langchain_core.messages import SystemMessage, AIMessage
 import json
 
@@ -12,7 +12,11 @@ from app.agent.skills.faq_search import knowledge_base_search
 from app.agent.skills.escalation import escalate_to_engineer
 from app.agent.skills.sentiment import equipment_status
 from app.agent.skills.chart_generator import generate_chart
-from app.config import OPENAI_API_KEY, OPENAI_MODEL, TEMPERATURE
+from app.config import (
+    LLM_PROVIDER, OPENAI_API_KEY, OPENAI_MODEL, TEMPERATURE,
+    AZURE_OPENAI_API_KEY, AZURE_OPENAI_ENDPOINT,
+    AZURE_OPENAI_DEPLOYMENT, AZURE_OPENAI_API_VERSION,
+)
 
 # All agent skills (tools)
 tools = [work_order_lookup, equipment_status, defect_report, knowledge_base_search, escalate_to_engineer, generate_chart]
@@ -69,13 +73,29 @@ SKILL_DESCRIPTIONS = {
 }
 
 
-def _create_llm() -> ChatOpenAI:
-    return ChatOpenAI(
-        model=OPENAI_MODEL,
-        temperature=TEMPERATURE,
-        api_key=OPENAI_API_KEY,
-        streaming=True,
-    )
+def _create_llm():
+    """Create LLM instance based on the configured provider (openai or azure)."""
+    if LLM_PROVIDER == "azure":
+        if not AZURE_OPENAI_API_KEY or not AZURE_OPENAI_ENDPOINT or not AZURE_OPENAI_DEPLOYMENT:
+            raise ValueError(
+                "Azure OpenAI requires AZURE_OPENAI_API_KEY, AZURE_OPENAI_ENDPOINT, "
+                "and AZURE_OPENAI_DEPLOYMENT environment variables."
+            )
+        return AzureChatOpenAI(
+            azure_deployment=AZURE_OPENAI_DEPLOYMENT,
+            azure_endpoint=AZURE_OPENAI_ENDPOINT,
+            api_key=AZURE_OPENAI_API_KEY,
+            api_version=AZURE_OPENAI_API_VERSION,
+            temperature=TEMPERATURE,
+            streaming=True,
+        )
+    else:
+        return ChatOpenAI(
+            model=OPENAI_MODEL,
+            temperature=TEMPERATURE,
+            api_key=OPENAI_API_KEY,
+            streaming=True,
+        )
 
 
 def _planner_node(state: AgentState) -> dict:

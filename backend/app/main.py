@@ -50,6 +50,7 @@ async def _stream_agent_response(message: str, conversation_id: str):
 
     try:
         inputs = {"messages": list(history)}
+        final_assistant_content = ""
 
         async for event in agent_graph.astream_events(inputs, version="v2"):
             kind = event["event"]
@@ -61,7 +62,6 @@ async def _stream_agent_response(message: str, conversation_id: str):
                 output = event.get("data", {}).get("output")
                 if output and hasattr(output, "content"):
                     plan_text = str(output.content).strip()
-                    # Strip __PLAN__: prefix if present
                     if "__PLAN__:" in plan_text:
                         plan_text = plan_text.split("__PLAN__:")[1]
                     try:
@@ -78,6 +78,13 @@ async def _stream_agent_response(message: str, conversation_id: str):
                     except (json.JSONDecodeError, IndexError):
                         pass
                 continue
+
+            # --- Capture final assistant response from agent node ---
+            if kind == "on_chat_model_end" and langgraph_node == "agent":
+                output = event.get("data", {}).get("output")
+                if output and hasattr(output, "content") and output.content:
+                    if not (hasattr(output, "tool_calls") and output.tool_calls):
+                        final_assistant_content = output.content
 
             # --- TOOL START ---
             if kind == "on_tool_start":
@@ -117,7 +124,6 @@ async def _stream_agent_response(message: str, conversation_id: str):
                             "summary": output_data.get("summary", ""),
                             "timestamp": datetime.now().isoformat(),
                         })
-                    # Send clean skill_result (no base64)
                     yield _format_sse("skill_result", {
                         "skill_name": tool_name,
                         "display_name": skill_info.get("name", tool_name),
@@ -136,16 +142,13 @@ async def _stream_agent_response(message: str, conversation_id: str):
 
             # --- LLM STREAMING (only from agent node, NOT planner) ---
             elif kind == "on_chat_model_stream":
-                # Skip tokens from planner node
                 if langgraph_node == "planner":
                     continue
 
                 chunk = event.get("data", {}).get("chunk")
                 if chunk and hasattr(chunk, "content") and chunk.content:
-                    # Skip plan-related content
                     if "__PLAN__" in chunk.content:
                         continue
-                    # Only yield when no tool calls
                     if not (hasattr(chunk, "tool_calls") and chunk.tool_calls) and \
                        not (hasattr(chunk, "tool_call_chunks") and chunk.tool_call_chunks):
                         yield _format_sse("message", {
@@ -153,11 +156,10 @@ async def _stream_agent_response(message: str, conversation_id: str):
                             "timestamp": datetime.now().isoformat(),
                         })
 
-        # Get final state to update conversation history
-        final_state = await agent_graph.ainvoke({"messages": list(history)})
-        clean_messages = [m for m in final_state["messages"]
-                          if not (hasattr(m, 'content') and "__PLAN__" in str(m.content))]
-        conversations[conversation_id] = clean_messages
+        # Save conversation history without re-running the graph
+        if final_assistant_content:
+            history.append(AIMessage(content=final_assistant_content))
+        conversations[conversation_id] = list(history)
 
     except Exception as e:
         yield _format_sse("error", {
@@ -205,4 +207,9 @@ async def list_skills():
 @app.get("/api/health")
 async def health():
     """Health check endpoint."""
-    return {"status": "ok", "timestamp": datetime.now().isoformat()}
+    from app.config import LLM_PROVIDER
+    return {
+        "status": "ok",
+        "llm_provider": LLM_PROVIDER,
+        "timestamp": datetime.now().isoformat(),
+    }
