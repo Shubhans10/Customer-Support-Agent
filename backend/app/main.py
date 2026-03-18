@@ -195,6 +195,9 @@ async def list_skills():
             name=info["name"],
             description=info["description"],
             icon=info["icon"],
+            details=info.get("details"),
+            examples=info.get("examples"),
+            data_source=info.get("data_source"),
         ))
     return {"skills": skills}
 

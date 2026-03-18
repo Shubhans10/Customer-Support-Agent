@@ -29,7 +29,7 @@ export const Sidebar: React.FC<SidebarProps> = ({ skills, onSampleQuery }) => {
             <div className="sidebar-section">
                 <div className="sidebar-section-title">Agent Skills</div>
                 {skills.map((skill) => (
-                    <SkillCard key={skill.name} skill={skill} />
+                    <SkillCard key={skill.name} skill={skill} onExampleClick={onSampleQuery} />
                 ))}
             </div>
 

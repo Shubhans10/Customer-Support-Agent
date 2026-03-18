@@ -29,3 +29,7 @@ class SkillInfo(BaseModel):
     name: str
     description: str
     icon: str
+    details: Optional[str] = None
+    examples: Optional[list[str]] = None
+    data_source: Optional[str] = None
+

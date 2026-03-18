@@ -35,6 +35,9 @@ export interface SkillInfo {
     name: string;
     description: string;
     icon: string;
+    details?: string;
+    examples?: string[];
+    data_source?: string;
 }
 
 export interface ChatState {
