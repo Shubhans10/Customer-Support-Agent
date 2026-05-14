@@ -5,7 +5,7 @@ from langchain_core.messages import SystemMessage, AIMessage
 import json
 
 from app.agent.state import AgentState
-from app.agent.prompts import SYSTEM_PROMPT, PLANNER_PROMPT
+from app.agent.prompts import SYSTEM_PROMPT, PLANNER_PROMPT, AGENT_ONLY_PROMPT
 from app.agent.skills.order_lookup import work_order_lookup
 from app.agent.skills.refund import defect_report
 from app.agent.skills.faq_search import knowledge_base_search
@@ -73,7 +73,7 @@ SKILL_DESCRIPTIONS = {
 }
 
 
-def _create_llm():
+def _create_llm(streaming: bool = True):
     """Create LLM instance based on the configured provider (openai or azure)."""
     if LLM_PROVIDER == "azure":
         if not AZURE_OPENAI_API_KEY or not AZURE_OPENAI_ENDPOINT or not AZURE_OPENAI_DEPLOYMENT:
@@ -87,37 +87,66 @@ def _create_llm():
             api_key=AZURE_OPENAI_API_KEY,
             api_version=AZURE_OPENAI_API_VERSION,
             temperature=TEMPERATURE,
-            streaming=True,
+            streaming=streaming,
         )
     else:
         return ChatOpenAI(
             model=OPENAI_MODEL,
             temperature=TEMPERATURE,
             api_key=OPENAI_API_KEY,
-            streaming=True,
+            streaming=streaming,
         )
 
 
+def _extract_token_usage(response, node_name: str) -> dict:
+    """Extract token usage from an LLM response and format as a usage dict."""
+    usage = {}
+    if hasattr(response, "usage_metadata") and response.usage_metadata:
+        meta = response.usage_metadata
+        prompt = meta.get("input_tokens", 0)
+        completion = meta.get("output_tokens", 0)
+        total = meta.get("total_tokens", prompt + completion)
+        usage = {
+            "prompt_tokens": prompt,
+            "completion_tokens": completion,
+            "total_tokens": total,
+            "nodes": [{
+                "node": node_name,
+                "prompt_tokens": prompt,
+                "completion_tokens": completion,
+                "total_tokens": total,
+            }],
+        }
+    return usage
+
+
+# ═══════════════════════════════════════════════════════
+# SKILLS GRAPH (existing pipeline with token tracking)
+# ═══════════════════════════════════════════════════════
+
 def _planner_node(state: AgentState) -> dict:
     """Plan which skills to use and in what order."""
-    llm = _create_llm()
+    llm = _create_llm(streaming=False)
     messages = state["messages"]
-    
+
     # Get the latest user message
     user_msg = ""
     for msg in reversed(messages):
         if hasattr(msg, 'content') and not isinstance(msg, AIMessage):
             user_msg = msg.content
             break
-    
+
     planner_messages = [
         SystemMessage(content=PLANNER_PROMPT),
         SystemMessage(content=f"User query: {user_msg}")
     ]
-    
+
     response = llm.invoke(planner_messages)
     plan_text = response.content.strip()
-    
+
+    # Track token usage
+    usage = _extract_token_usage(response, "planner")
+
     # Try to parse the plan
     try:
         # Handle markdown code blocks
@@ -128,15 +157,18 @@ def _planner_node(state: AgentState) -> dict:
         plan = json.loads(plan_text)
     except (json.JSONDecodeError, IndexError):
         plan = []
-    
+
     # Store plan in a system message so the stream handler can pick it up
     plan_msg = SystemMessage(content=f"__PLAN__:{json.dumps(plan)}")
-    return {"messages": [plan_msg]}
+    result = {"messages": [plan_msg]}
+    if usage:
+        result["token_usage"] = usage
+    return result
 
 
 def _agent_node(state: AgentState) -> dict:
     """Run the LLM agent with tools bound."""
-    llm = _create_llm()
+    llm = _create_llm(streaming=True)
     llm_with_tools = llm.bind_tools(tools)
 
     messages = state["messages"]
@@ -147,7 +179,16 @@ def _agent_node(state: AgentState) -> dict:
         messages = [SystemMessage(content=SYSTEM_PROMPT)] + filtered
 
     response = llm_with_tools.invoke(messages)
-    return {"messages": [response]}
+
+    # Track token usage — count agent iterations
+    existing_nodes = state.get("token_usage", {}).get("nodes", [])
+    agent_call_num = sum(1 for n in existing_nodes if n.get("node", "").startswith("agent")) + 1
+    usage = _extract_token_usage(response, f"agent_call_{agent_call_num}")
+
+    result = {"messages": [response]}
+    if usage:
+        result["token_usage"] = usage
+    return result
 
 
 def _should_continue(state: AgentState) -> str:
@@ -159,7 +200,7 @@ def _should_continue(state: AgentState) -> str:
 
 
 def build_graph() -> StateGraph:
-    """Build and compile the LangGraph agent graph."""
+    """Build and compile the LangGraph agent graph (Skills pipeline)."""
     graph = StateGraph(AgentState)
 
     # Add nodes — sequential: planner → agent → tools → agent loop
@@ -189,5 +230,40 @@ def build_graph() -> StateGraph:
     return graph.compile()
 
 
-# Pre-compiled graph instance
+# ═══════════════════════════════════════════════════════
+# AGENT-ONLY GRAPH (pure LLM, no tools)
+# ═══════════════════════════════════════════════════════
+
+def _agent_only_node(state: AgentState) -> dict:
+    """Run the LLM agent WITHOUT any tools — pure reasoning."""
+    llm = _create_llm(streaming=True)
+
+    messages = state["messages"]
+    # Prepend agent-only system prompt
+    if not messages or not isinstance(messages[0], SystemMessage):
+        messages = [SystemMessage(content=AGENT_ONLY_PROMPT)] + list(messages)
+
+    response = llm.invoke(messages)
+
+    usage = _extract_token_usage(response, "agent_direct")
+
+    result = {"messages": [response]}
+    if usage:
+        result["token_usage"] = usage
+    return result
+
+
+def build_agent_only_graph() -> StateGraph:
+    """Build and compile a simple LLM-only graph (no tools)."""
+    graph = StateGraph(AgentState)
+
+    graph.add_node("agent", _agent_only_node)
+    graph.set_entry_point("agent")
+    graph.add_edge("agent", END)
+
+    return graph.compile()
+
+
+# Pre-compiled graph instances
 agent_graph = build_graph()
+agent_only_graph = build_agent_only_graph()

@@ -48,3 +48,68 @@ export interface ChatState {
     conversationId: string;
     error: string | null;
 }
+
+// ═══════════════════════════════════════════════════════
+// Comparison Mode Types
+// ═══════════════════════════════════════════════════════
+
+export interface TokenUsageNode {
+    node: string;
+    prompt_tokens: number;
+    completion_tokens: number;
+    total_tokens: number;
+}
+
+export interface TokenUsage {
+    prompt_tokens: number;
+    completion_tokens: number;
+    total_tokens: number;
+    nodes: TokenUsageNode[];
+}
+
+export interface SkillEvent {
+    type: "start" | "result";
+    skill_name: string;
+    display_name: string;
+    icon: string;
+}
+
+export interface MethodResult {
+    content: string;
+    planSteps: PlanStep[];
+    skillEvents: SkillEvent[];
+    tokenUsage: TokenUsage;
+    timeMs: number;
+    estimatedCost: number;
+}
+
+export interface ComparisonSummary {
+    skills: {
+        total_tokens: number;
+        prompt_tokens: number;
+        completion_tokens: number;
+        time_ms: number;
+        estimated_cost: number;
+        skills_used: number;
+        nodes: TokenUsageNode[];
+    };
+    agent: {
+        total_tokens: number;
+        prompt_tokens: number;
+        completion_tokens: number;
+        time_ms: number;
+        estimated_cost: number;
+        nodes: TokenUsageNode[];
+    };
+    token_diff_pct: number;
+    time_diff_pct: number;
+    model: string;
+}
+
+export interface CompareState {
+    skillsResult: MethodResult | null;
+    agentResult: MethodResult | null;
+    summary: ComparisonSummary | null;
+    isLoading: boolean;
+    error: string | null;
+}

@@ -8,6 +8,11 @@ class ChatRequest(BaseModel):
     conversation_id: Optional[str] = None
 
 
+class CompareRequest(BaseModel):
+    message: str
+    conversation_id: Optional[str] = None
+
+
 class SkillEventType(str, Enum):
     SKILL_START = "skill_start"
     SKILL_RESULT = "skill_result"
@@ -33,3 +38,19 @@ class SkillInfo(BaseModel):
     examples: Optional[list[str]] = None
     data_source: Optional[str] = None
 
+
+class TokenUsageNode(BaseModel):
+    node: str
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
+    total_tokens: int = 0
+
+
+class TokenUsageSummary(BaseModel):
+    method: str
+    prompt_tokens: int = 0
+    completion_tokens: int = 0
+    total_tokens: int = 0
+    nodes: list[TokenUsageNode] = []
+    time_ms: float = 0
+    estimated_cost: float = 0

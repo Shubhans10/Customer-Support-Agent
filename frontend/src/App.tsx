@@ -1,16 +1,26 @@
 import { useState, useEffect } from "react";
 import { useChat } from "./hooks/useChat";
+import { useCompare } from "./hooks/useCompare";
 import { ChatWindow } from "./components/Chat/ChatWindow";
 import { ChatInput } from "./components/Chat/ChatInput";
 import { SkillTracePanel } from "./components/SkillTrace/SkillTracePanel";
 import { Sidebar } from "./components/Sidebar/Sidebar";
+import { CompareToggle } from "./components/Compare/CompareToggle";
+import { ComparisonView } from "./components/Compare/ComparisonView";
 import type { SkillInfo } from "./types";
 import { fetchSkills } from "./utils/api";
 
 function App() {
   const { messages, skillSteps, planSteps, isLoading, error, sendMessage, clearChat } =
     useChat();
+  const {
+    skillsResult, agentResult, summary,
+    isLoading: compareLoading, error: compareError,
+    sendCompare, clearCompare,
+  } = useCompare();
+
   const [skills, setSkills] = useState<SkillInfo[]>([]);
+  const [compareMode, setCompareMode] = useState(false);
 
   useEffect(() => {
     fetchSkills()
@@ -28,9 +38,29 @@ function App() {
       });
   }, []);
 
+  const handleToggleCompare = () => {
+    setCompareMode((prev) => !prev);
+  };
+
+  const handleSend = (msg: string) => {
+    if (compareMode) {
+      sendCompare(msg);
+    } else {
+      sendMessage(msg);
+    }
+  };
+
+  const handleClear = () => {
+    if (compareMode) {
+      clearCompare();
+    } else {
+      clearChat();
+    }
+  };
+
   return (
     <div className="app-layout">
-      <Sidebar skills={skills} onSampleQuery={sendMessage} />
+      <Sidebar skills={skills} onSampleQuery={handleSend} />
 
       <div className="main-chat">
         <div className="chat-header">
@@ -41,22 +71,39 @@ function App() {
               Agent Online
             </div>
           </div>
-          <button className="clear-btn" onClick={clearChat} id="clear-chat-btn">
-            Clear Chat
-          </button>
+          <div className="chat-header-actions">
+            <CompareToggle compareMode={compareMode} onToggle={handleToggleCompare} />
+            <button className="clear-btn" onClick={handleClear} id="clear-chat-btn">
+              Clear Chat
+            </button>
+          </div>
         </div>
 
-        {error && (
-          <div className="error-banner">
-            ⚠️ {error}
-          </div>
+        {compareMode ? (
+          <ComparisonView
+            skillsResult={skillsResult}
+            agentResult={agentResult}
+            summary={summary}
+            isLoading={compareLoading}
+            error={compareError}
+            onSend={sendCompare}
+          />
+        ) : (
+          <>
+            {error && (
+              <div className="error-banner">
+                ⚠️ {error}
+              </div>
+            )}
+            <ChatWindow messages={messages} isLoading={isLoading} />
+            <ChatInput onSend={sendMessage} isLoading={isLoading} />
+          </>
         )}
-
-        <ChatWindow messages={messages} isLoading={isLoading} />
-        <ChatInput onSend={sendMessage} isLoading={isLoading} />
       </div>
 
-      <SkillTracePanel steps={skillSteps} planSteps={planSteps} />
+      {!compareMode && (
+        <SkillTracePanel steps={skillSteps} planSteps={planSteps} />
+      )}
     </div>
   );
 }
